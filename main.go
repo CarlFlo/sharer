@@ -10,6 +10,7 @@ import (
 const (
 	port      = "25565"
 	directory = "./root"
+	useTLS    = true
 )
 
 func init() {
@@ -25,8 +26,13 @@ func main() {
 func startServer() {
 	http.Handle("/", http.FileServer(http.Dir(directory)))
 
-	log.Printf("Serving folder '%s' from %s:%s\n", directory, getIP(), port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("Serving folder '%s' from https://%s:%s\n", directory, getIP(), port)
+
+	if useTLS {
+		log.Fatal(http.ListenAndServeTLS(":"+port, "cert.pem", "key.pem", nil))
+	} else {
+		log.Fatal(http.ListenAndServe(":"+port, nil))
+	}
 }
 
 func getIP() string {
