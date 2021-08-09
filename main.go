@@ -7,8 +7,10 @@ import (
 	"os"
 )
 
-const port = "25565"
-const directory = "./root"
+const (
+	port      = "25565"
+	directory = "./root"
+)
 
 func init() {
 	err := os.MkdirAll(directory, 0755)
