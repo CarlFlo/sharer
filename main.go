@@ -35,10 +35,10 @@ func startServer() {
 	log.Printf("Serving folder '%s'\n", directory)
 
 	if useTLS {
-		fmt.Printf("https://%s:%s\nhttps://localhost%s\n", getIP(), port, port)
+		fmt.Printf("https://%s:%s\nhttps://localhost:%s\n", getIP(), port, port)
 		log.Fatal(http.ListenAndServeTLS(":"+port, "cert.pem", "key.pem", nil))
 	} else {
-		fmt.Printf("http://%s:%s\nhttp://localhost%s\n", getIP(), port, port)
+		fmt.Printf("http://%s:%s\nhttp://localhost:%s\n", getIP(), port, port)
 		log.Fatal(http.ListenAndServe(":"+port, nil))
 	}
 }
