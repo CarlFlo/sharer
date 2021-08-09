@@ -18,8 +18,7 @@ var (
 func init() {
 	flag.StringVar(&port, "p", "25565", "Port to serve on")
 	flag.StringVar(&directory, "d", "./root", "Directory to serve")
-	flag.BoolVar(&useTLS, "tls", false, "Using TLS or not")
-
+	flag.BoolVar(&useTLS, "tls", false, "Set to use TLS (Requires cert and key file)")
 	flag.Parse()
 
 	err := os.MkdirAll(directory, 0755)
@@ -36,10 +35,10 @@ func startServer() {
 	log.Printf("Serving folder '%s'\n", directory)
 
 	if useTLS {
-		fmt.Printf("https://%s:%s\nhttps://localhost%s", getIP(), port, port)
+		fmt.Printf("https://%s:%s\nhttps://localhost%s\n", getIP(), port, port)
 		log.Fatal(http.ListenAndServeTLS(":"+port, "cert.pem", "key.pem", nil))
 	} else {
-		fmt.Printf("http://%s:%s\nhttp://localhost%s", getIP(), port, port)
+		fmt.Printf("http://%s:%s\nhttp://localhost%s\n", getIP(), port, port)
 		log.Fatal(http.ListenAndServe(":"+port, nil))
 	}
 }
