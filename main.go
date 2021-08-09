@@ -1,19 +1,27 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 )
 
-const (
-	port      = "25565"
-	directory = "./root"
-	useTLS    = true
+var (
+	port      string
+	directory string
+	useTLS    bool
 )
 
 func init() {
+	flag.StringVar(&port, "p", "25565", "Port to serve on")
+	flag.StringVar(&directory, "d", "./root", "Directory to serve")
+	flag.BoolVar(&useTLS, "tls", false, "Using TLS or not")
+
+	flag.Parse()
+
 	err := os.MkdirAll(directory, 0755)
 	check(err)
 }
@@ -25,12 +33,13 @@ func main() {
 
 func startServer() {
 	http.Handle("/", http.FileServer(http.Dir(directory)))
-
-	log.Printf("Serving folder '%s' from https://%s:%s\n", directory, getIP(), port)
+	log.Printf("Serving folder '%s'\n", directory)
 
 	if useTLS {
+		fmt.Printf("https://%s:%s\nhttps://localhost%s", getIP(), port, port)
 		log.Fatal(http.ListenAndServeTLS(":"+port, "cert.pem", "key.pem", nil))
 	} else {
+		fmt.Printf("http://%s:%s\nhttp://localhost%s", getIP(), port, port)
 		log.Fatal(http.ListenAndServe(":"+port, nil))
 	}
 }
